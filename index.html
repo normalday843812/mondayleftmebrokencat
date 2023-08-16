@@ -137,12 +137,7 @@
     var video = document.getElementById("myVideo");
     var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-    if (isMobile) {
-      window.addEventListener('orientationchange', function () {
-        location.reload();
-      }, false);
-    }
-    
+    // Function to close the overlay and play the video
     function closeOverlay() {
       video.style.filter = "none";
       video.muted = false;
@@ -150,15 +145,25 @@
       document.getElementById("overlay").style.display = "none";
     }
 
-    function acceptCookies() {
-      closeOverlay();
+    // Get all the buttons
+    var buttons = document.querySelectorAll("button");
+
+    // Add click event listener to each button
+    buttons.forEach(function(button) {
+      button.addEventListener("click", closeOverlay);
+    });
+
+    if (isMobile) {
+      window.addEventListener('orientationchange', function () {
+        location.reload();
+      }, false);
     }
 
     document.querySelector('#hamburger').addEventListener('click', function() {
       video.play();
     });
 
-    document.getElementById('accept-button').addEventListener('click', acceptCookies);
+    document.getElementById('accept-button').addEventListener('click', closeOverlay);
   </script>
 
 </body>
