@@ -1,40 +1,165 @@
 <!DOCTYPE html>
 <html>
 <head>
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <link href="https://fonts.googleapis.com/css2?family=Open+Sans&display=swap" rel="stylesheet">
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0-beta2/css/all.min.css"/>
+
+  <style>
+    body {
+      margin:0; 
+      padding:0; 
+      overflow:hidden; 
+      background: black; 
+      font-family: 'Open Sans', sans-serif;
+    }
+
+    #top-bar {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 50px;
+      background: #333;
+      color: white;
+      display: flex;
+      align-items: center;
+      justify-content: space-between;
+      font-size: 20px;
+      padding: env(safe-area-inset-top) env(safe-area-inset-right) env(safe-area-inset-bottom) env(safe-area-inset-left);
+      z-index: 1;
+    }
+
+    #hamburger {
+      margin-right: 20px;
+      font-size: 24px;
+      cursor: pointer;
+    }
+
+    #top-bar p {
+      margin-left: 20px;
+    }
+
+    #overlay {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      background: rgba(255, 255, 255, 0.8);
+      display: flex;
+      justify-content: center;
+      align-items: center;
+      z-index: 2;
+    }
+
+    #modal {
+      background: white;
+      padding: 20px;
+      width: 90%;
+      max-width: 300px;
+      border-radius: 20px;
+      position: relative;
+      box-shadow: 0px 0px 10px rgba(0, 0, 0, 0.5);
+      text-align: center;
+    }
+
+    button {
+      padding: 10px 20px;
+      font-size: 20px;
+      border-radius: 20px;
+      border: none;
+      margin-top: 10px;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    #customize-button {
+      color: white;
+      background: #555;
+    }
+
+    #accept-button {
+      color: white;
+      background: #007BFF;
+    }
+
+    button:hover {
+      opacity: 0.8;
+    }
+    
+    @media screen and (max-width: 600px) {
+      #modal {
+        max-width: 80vw;
+      }
+
+      #top-bar, button, h1 {
+        font-size: 15px;
+      }
+    }
+
+    @media screen and (orientation: landscape) {
+      #top-bar {
+        height: 30px;
+      }
+    }
+  </style>
 </head>
-<body style="margin:0; padding:0; overflow:hidden; background: black; font-family: 'Open Sans', sans-serif;">
+<body>
 
-<video id="myVideo" style="position: fixed; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translate(-50%, -50%); filter: blur(55px);" loop playsinline>
-  <source src="https://github.com/KaiStewart2019/greatamazingvideo/raw/main/amazingvideo.mp4" type="video/mp4">
-  Your browser does not support the video tag.
-</video>
+  <div id="top-bar">
+      <p>BuzzPortal</p>
+      <i id="hamburger" class="fas fa-bars"></i>
+  </div>
 
-<div id="overlay" style="position: fixed; top: 0; left: 0; width: 100%; height: 100%; background: rgba(0, 0, 0, 0.5); display: flex; justify-content: center; align-items: center;">
-  <div style="background: white; padding: 20px; width: 80%; max-width: 500px; border-radius: 20px; position: relative;">
-    <div style="position: absolute; top: 10px; right: 10px; font-weight: bold; color: gray; cursor: pointer;" onclick="closeOverlay()">X</div>
-    <h1 style="font-weight: bold; margin-bottom: 20px; color: black;">We use cookies!</h1>
-    <p style="color: black;">We use cookies! To continue please accept our <span style="color: blue; text-decoration: underline; cursor: pointer;">Cookie Policy</span></p>
-    <div style="width: 100%; border-top: 1px solid black; margin: 20px 0;"></div>
-    <div>
-      <button style="padding: 10px 20px; font-size: 20px; border-radius: 20px; margin-right: 10px; border: 1px solid gray; color: black; background: white;">Customize</button>
-      <button style="padding: 10px 20px; font-size: 20px; border-radius: 20px; background: blue; color: white; border: none;" onclick="acceptCookies()">Accept</button>
+  <video 
+    id="myVideo" 
+    style="position: absolute; top: 50%; left: 50%; min-width: 100%; min-height: 100%; width: auto; height: auto; transform: translate(-50%, -50%); filter: blur(20px);" 
+    loop 
+    playsinline 
+    autoPlay 
+    muted
+  >
+    <source src="https://github.com/KaiStewart2019/greatamazingvideo/raw/main/amazingvideo.mp4" type="video/mp4">
+    Your browser does not support the video tag.
+  </video>
+
+  <div id="overlay">
+    <div id="modal">
+      <h1>We use cookies!</h1>
+      <p>We use cookies to personalize your experience. By accepting, you agree to our <a href="#" style="color: #007BFF; text-decoration: none;">Cookie Policy</a>.</p>
+      <button id="customize-button">Customize</button>
+      <button id="accept-button">Accept</button>
     </div>
   </div>
-</div>
+  
+  <script>
+    var video = document.getElementById("myVideo");
+    var isMobile = /iPhone|iPad|iPod|Android/i.test(navigator.userAgent);
 
-<script>
-function closeOverlay() {
-  var video = document.getElementById("myVideo");
-  video.style.filter = "none";
-  video.play();
-  document.getElementById("overlay").style.display = "none";
-}
+    if (isMobile) {
+      window.addEventListener('orientationchange', function () {
+        location.reload();
+      }, false);
+    }
+    
+    function closeOverlay() {
+      video.style.filter = "none";
+      video.muted = false;
+      video.play();
+      document.getElementById("overlay").style.display = "none";
+    }
 
-function acceptCookies() {
-  closeOverlay();
-}
-</script>
+    function acceptCookies() {
+      closeOverlay();
+    }
+
+    document.querySelector('#hamburger').addEventListener('click', function() {
+      video.play();
+    });
+
+    document.getElementById('accept-button').addEventListener('click', acceptCookies);
+  </script>
 
 </body>
 </html>
